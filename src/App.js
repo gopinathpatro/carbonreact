@@ -1,5 +1,5 @@
 import React from 'react';
-import HMCTable from './components/datatables/HMCTable.js';
+import HMCTable from './components/datatables/CustomTable.js';
 import './App.css';
 
 function App() {

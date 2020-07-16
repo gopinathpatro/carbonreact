@@ -19,29 +19,29 @@ const {
 } = DataTable;
 
 const plans = [{
-  "FirstName": null,
-  "LastName": null,
-  "ID": "Dedicated",
-  "Address": "Not_Migrating",
-  "Country": null
+  "FirstName": "Gopinath",
+  "LastName": "Patro",
+  "ID": "G001",
+  "Address": "Odisha",
+  "Country": "India"
 }, {
-    "FirstName": null,
-    "LastName": null,
-    "ID": "Dedicated",
-    "Address": "Not_Migrating",
-    "Country": null
+    "FirstName": "Ravishankar",
+    "LastName": "Ramaswamy",
+    "ID": "G002",
+    "Address": "Shimoga",
+    "Country": "India"
 }, {
-    "FirstName": null,
-    "LastName": null,
-    "ID": "Dedicated",
-    "Address": "Not_Migrating",
-    "Country": null
+    "FirstName": "Naveen",
+    "LastName": "G",
+    "ID": "G003",
+    "Address": "Tumkur",
+    "Country": "India"
 }, {
-    "FirstName": null,
-    "LastName": null,
-    "ID": "Dedicated",
-    "Address": "Not_Migrating",
-    "Country": null
+    "FirstName": "Dipak",
+    "LastName": "Pratap",
+    "ID": "G004",
+    "Address": "Odisha",
+    "Country": "India"
 }];
 
 const headers = [

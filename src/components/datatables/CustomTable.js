@@ -21,36 +21,36 @@ const {
 const plans = [{
   "FirstName": "Gopinath",
   "LastName": "Patro",
-  "ID": "G001",
+  "id": "G001",
   "Address": "Odisha",
   "Country": "India"
 }, {
     "FirstName": "Ravishankar",
     "LastName": "Ramaswamy",
-    "ID": "G002",
+    "id": "G002",
     "Address": "Shimoga",
     "Country": "India"
 }, {
     "FirstName": "Naveen",
     "LastName": "G",
-    "ID": "G003",
+    "id": "G003",
     "Address": "Tumkur",
     "Country": "India"
 }, {
     "FirstName": "Dipak",
     "LastName": "Pratap",
-    "ID": "G004",
+    "id": "G004",
     "Address": "Odisha",
     "Country": "India"
 }];
 
 const headers = [
   {
-    key: "Name",
+    key: "FirstName",
     header: "First Name"
   },
   {
-    key: "LName",
+    key: "LastName",
     header: "Last Name"
   },
   {
@@ -115,10 +115,11 @@ class HMCTable extends Component {
 
   render() {
     console.log("plans size", this.state.plans.length);
+    plans.map(r => console.log(r));
     return (
       <div>
         <DataTable
-          rows={this.state.plans.slice(this.state.startRow, this.state.endRow)}
+          rows={this.state.plans}
           headers={headers}
           render={({
             rows,
@@ -135,12 +136,15 @@ class HMCTable extends Component {
               <TableContainer title="DataTable">
               
                 <TableToolbar>
-                  <TableToolbarSearch
-                    onChange={this.handleOnInputValueChange}
-                  /> 
-                  <TableToolbarMenu>
-                    <TableToolbarAction>Hello</TableToolbarAction>
-                  </TableToolbarMenu>
+                <TableToolbarContent>
+                    <TableToolbarSearch
+                      onChange={this.handleOnInputValueChange}
+                    />
+                    <TableToolbarMenu>
+                      <TableToolbarAction>Hello</TableToolbarAction>
+                    </TableToolbarMenu>
+                </TableToolbarContent>
+                  
                 </TableToolbar>
                 
                 <Table>
@@ -155,9 +159,10 @@ class HMCTable extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map(row => (
-                      <TableRow key={row.UUID}>
-                        <TableSelectRow {...getSelectionProps({ row})} />
+                    {rows.map((row, i) => (
+                      
+                      <TableRow key={row.id}>
+                        <TableSelectRow {...getSelectionProps({ row })} />
                         {row.cells.map(cell => (
                           <TableCell key={cell.id}>{cell.value}</TableCell>
                         ))}

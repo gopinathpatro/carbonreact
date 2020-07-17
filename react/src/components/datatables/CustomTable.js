@@ -18,32 +18,7 @@ const {
   TableBatchAction
 } = DataTable;
 
-const plans = [{
-  "FirstName": "Gopinath",
-  "LastName": "Patro",
-  "id": "G001",
-  "Address": "Odisha",
-  "Country": "India"
-}, {
-    "FirstName": "Ravishankar",
-    "LastName": "Ramaswamy",
-    "id": "G002",
-    "Address": "Shimoga",
-    "Country": "India"
-}, {
-    "FirstName": "Naveen",
-    "LastName": "G",
-    "id": "G003",
-    "Address": "Tumkur",
-    "Country": "India"
-}, {
-    "FirstName": "Dipak",
-    "LastName": "Pratap",
-    "id": "G004",
-    "Address": "Odisha",
-    "Country": "India"
-}];
-
+let userData = [];
 const headers = [
   {
     key: "FirstName",
@@ -54,7 +29,7 @@ const headers = [
     header: "Last Name"
   },
   {
-    key: "ID",
+    key: "id",
     header: "ID"
   },
   {
@@ -67,21 +42,31 @@ const headers = [
   }
 ];
 
-const menus = [{ "name": "Save" }, { "name": "Copy" }, { "name":"Delete"}];
+const menus = [
+  { "name": "Save",
+    "id" : "id001"
+  }, { "name": "Copy",
+        "id" : "id002"
+  }, { 
+    "name":"Delete",
+    "id" : "id003"
+  }];
 
 class CustomTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      plans: plans,
+      userData: props.rows,
       menus: menus,
       startRow: 0,
       endRow: 5
     };
   }
   
-  handleMenuChange(menuItem) {
-      console.log("Clicked: " + menuItem);
+  handleMenuChange(event, menuItem, selRows) {
+    let eventData = event;
+    console.log(eventData);
+      console.log("Clicked: " + menuItem.name + " -- " + event + " -- selected rows: " + selRows[0].id);
   }
   handlePageChange(e) {
     const startRow = e.pageSize * (e.page - 1);
@@ -95,7 +80,7 @@ class CustomTable extends Component {
 
   handleOnInputValueChange = event => {
     if (event.target.value) {
-      let filteredPlans = plans.filter(obj => {
+      let filteredPlans = userData.filter(obj => {
         let match = false;
         Object.values(obj).forEach(value => {
           if (!match) {
@@ -113,19 +98,21 @@ class CustomTable extends Component {
       });
 
       console.log("filtered plans size", filteredPlans.length);
-      this.setState({ plans: filteredPlans });
+      this.setState({ userData: filteredPlans });
     } else {
-      this.setState({ plans });
+      this.setState({ userData });
     }
   };
-
+// <TableBatchActions {...getBatchActionProps()}>
+//   <TableBatchAction onClick={this.handleMenuChange(selectedRows)}>Edit</TableBatchAction>
+// </TableBatchActions>
   render() {
-    console.log("plans size", this.state.plans.length);
-    plans.map(r => console.log(r));
+    console.log("plans size", this.state.userData.length);
+    userData.map(r => console.log(r));
     return (
       <div>
         <DataTable
-          rows={this.state.plans}
+          rows={this.state.userData}
           headers={headers}
           render={({
             rows,
@@ -134,23 +121,25 @@ class CustomTable extends Component {
             getRowProps,
             getSelectionProps,
             getBatchActionProps,
-            selectedRows,
             onInputChange,
-            selectRow
+            selectedRows,
+
           }) => {
             return (
               <TableContainer title="DataTable">
               
                 <TableToolbar>
+                  
                 <TableToolbarContent>
                     <TableToolbarSearch
                       onChange={this.handleOnInputValueChange}
                     />
                     <TableToolbarMenu>
                     {
-                        this.state.menus.map(menu => (<TableToolbarAction key={menu.name} onClick={this.handleMenuChange(menu.name)}>{menu.name}</TableToolbarAction>))
+                        this.state.menus.map(menu => (<TableToolbarAction key={menu.id} onClick={(e) => this.handleMenuChange(e ,menu, selectedRows)}>{menu.name}</TableToolbarAction>))
                     }
                     </TableToolbarMenu>
+                    
                 </TableToolbarContent>
                   
                 </TableToolbar>
@@ -179,7 +168,7 @@ class CustomTable extends Component {
                   </TableBody>
                 </Table>
                 <Pagination
-                  totalItems={this.state.plans.length}
+                  totalItems={this.state.userData.length}
                   pageSize={3}
                   pageSizes={[3, 6, 9]}
                   onChange={e => this.handlePageChange(e)}

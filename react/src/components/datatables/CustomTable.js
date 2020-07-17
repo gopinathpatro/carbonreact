@@ -67,16 +67,22 @@ const headers = [
   }
 ];
 
+const menus = [{ "name": "Save" }, { "name": "Copy" }, { "name":"Delete"}];
+
 class HMCTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       plans: plans,
+      menus: menus,
       startRow: 0,
       endRow: 5
     };
   }
-
+  
+  handleMenuChange(menuItem) {
+      console.log("Clicked: " + menuItem);
+  }
   handlePageChange(e) {
     const startRow = e.pageSize * (e.page - 1);
     //console.log('startRow: ' + startRow);
@@ -141,7 +147,9 @@ class HMCTable extends Component {
                       onChange={this.handleOnInputValueChange}
                     />
                     <TableToolbarMenu>
-                      <TableToolbarAction>Hello</TableToolbarAction>
+                    {
+                        this.state.menus.map(menu => (<TableToolbarAction key={menu.name} onClick={this.handleMenuChange(menu.name)}>{menu.name}</TableToolbarAction>))
+                    }
                     </TableToolbarMenu>
                 </TableToolbarContent>
                   
@@ -185,4 +193,4 @@ class HMCTable extends Component {
   }
 }
 
-export default HMCTable;
+export default CustomTable;

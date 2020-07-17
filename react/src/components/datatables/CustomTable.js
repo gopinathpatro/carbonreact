@@ -69,7 +69,7 @@ const headers = [
 
 const menus = [{ "name": "Save" }, { "name": "Copy" }, { "name":"Delete"}];
 
-class HMCTable extends Component {
+class CustomTable extends Component {
   constructor(props) {
     super(props);
     this.state = {

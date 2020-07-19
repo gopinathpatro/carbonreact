@@ -20,7 +20,7 @@ class App extends Component {
     console.log(this.state.userData);
     return (
       <div className="App">
-        <CustomTable rows={this.state.userData}/>
+        <CustomTable rows={this.state.userData} />
       </div>
     )
   }

@@ -62,6 +62,17 @@ class CustomTable extends Component {
       endRow: 5
     };
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.state.userData !== this.props.rows) {
+      this.onChangeUserData(this.props.rows);
+    }
+  }
+
+  onChangeUserData(newData) {
+    console.log("Ravi :: " + newData)
+    this.setState({ userData: newData });
+  }
   
   handleMenuChange(event, menuItem, selRows) {
     let eventData = event;

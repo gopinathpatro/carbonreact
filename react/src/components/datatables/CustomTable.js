@@ -99,10 +99,8 @@ componentDidUpdate = () => {
           }) => {
             return (
               <TableContainer title="DataTable">
-              
                 <TableToolbar>
-                  
-                <TableToolbarContent>
+                  <TableToolbarContent>
                     <TableToolbarSearch
                       onChange={this.handleOnInputValueChange}
                     />
@@ -111,9 +109,7 @@ componentDidUpdate = () => {
                         this.state.menus.map(menu => (<TableToolbarAction key={menu.name} onClick={(e) => this.handleMenuChange(e ,menu, selectedRows)}>{menu.name}</TableToolbarAction>))
                     }
                     </TableToolbarMenu>
-                    
-                </TableToolbarContent>
-                  
+                  </TableToolbarContent>  
                 </TableToolbar>
                 
                 <Table>

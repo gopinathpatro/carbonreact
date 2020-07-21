@@ -49,7 +49,7 @@ const menus = [
         "id" : "id002"
   }, { 
     "name":"Delete",
-    "id" : "id003"
+    "id" :"id003"
   }];
 
 class CustomTable extends Component {
@@ -57,21 +57,11 @@ class CustomTable extends Component {
     super(props);
     this.state = {
       userData: props.rows,
+      origData: props.rows,
       menus: menus,
       startRow: 0,
       endRow: 5
     };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.state.userData !== this.props.rows) {
-      this.onChangeUserData(this.props.rows);
-    }
-  }
-
-  onChangeUserData(newData) {
-    console.log("Ravi :: " + newData)
-    this.setState({ userData: newData });
   }
   
   handleMenuChange(event, menuItem, selRows) {
@@ -88,10 +78,17 @@ class CustomTable extends Component {
 
     this.setState({ startRow: startRow, endRow: endRow });
   }
-
+componentDidMount = () => {
+  fetch('http://localhost:8080/customer/all')
+    .then(res => res.json())
+    .then((data) => {
+      this.setState({ userData: data, origData: data, loading: true })
+    })
+    .catch(console.log)
+}
   handleOnInputValueChange = event => {
     if (event.target.value) {
-      let filteredPlans = userData.filter(obj => {
+      let filteredPlans = this.state.userData.filter(obj => {
         let match = false;
         Object.values(obj).forEach(value => {
           if (!match) {
@@ -109,14 +106,12 @@ class CustomTable extends Component {
       });
 
       console.log("filtered plans size", filteredPlans.length);
-      this.setState({ userData: filteredPlans });
+      this.setState({ ...this.state, userData: filteredPlans });
     } else {
-      this.setState({ userData });
+      this.setState({ ...this.state,userData: this.state.origData });
     }
   };
-// <TableBatchActions {...getBatchActionProps()}>
-//   <TableBatchAction onClick={this.handleMenuChange(selectedRows)}>Edit</TableBatchAction>
-// </TableBatchActions>
+
   render() {
     console.log("plans size", this.state.userData.length);
     userData.map(r => console.log(r));
@@ -147,7 +142,7 @@ class CustomTable extends Component {
                     />
                     <TableToolbarMenu>
                     {
-                        this.state.menus.map(menu => (<TableToolbarAction key={menu.id} onClick={(e) => this.handleMenuChange(e ,menu, selectedRows)}>{menu.name}</TableToolbarAction>))
+                        this.state.menus.map(menu => (<TableToolbarAction key={menu.name} onClick={(e) => this.handleMenuChange(e ,menu, selectedRows)}>{menu.name}</TableToolbarAction>))
                     }
                     </TableToolbarMenu>
                     
@@ -166,7 +161,7 @@ class CustomTable extends Component {
                       ))}
                     </TableRow>
                   </TableHead>
-                  <TableBody>
+                  <TableBody {...userData}>
                     {rows.map((row, i) => (
                       
                       <TableRow key={row.id}>

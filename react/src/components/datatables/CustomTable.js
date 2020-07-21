@@ -18,39 +18,6 @@ const {
   TableBatchAction
 } = DataTable;
 
-let userData = [];
-const headers = [
-  {
-    key: "FirstName",
-    header: "First Name"
-  },
-  {
-    key: "LastName",
-    header: "Last Name"
-  },
-  {
-    key: "id",
-    header: "ID"
-  },
-  {
-    key: "Address",
-    header: "Address"
-  },
-  {
-    key: "Country",
-    header: "Country"
-  }
-];
-
-const menus = [
-  { "name": "Save",
-    "id" : "id001"
-  }, { "name": "Copy",
-        "id" : "id002"
-  }, { 
-    "name":"Delete",
-    "id" :"id003"
-  }];
 
 class CustomTable extends Component {
   constructor(props) {
@@ -58,7 +25,8 @@ class CustomTable extends Component {
     this.state = {
       userData: props.rows,
       origData: props.rows,
-      menus: menus,
+      menus: props.menus,
+      headers: props.header,
       startRow: 0,
       endRow: 5
     };
@@ -79,7 +47,7 @@ class CustomTable extends Component {
     this.setState({ startRow: startRow, endRow: endRow });
   }
 componentDidUpdate = () => {
-  if(this.state.userData.length != this.state.filteredData.length) {
+  if(this.state.userData.length !== this.state.filteredData.length) {
     console.log("filterdData : " + this.state.filteredData.length);
     this.setState({...this.state, userData: this.state.filteredData});
   }
@@ -112,12 +80,12 @@ componentDidUpdate = () => {
 
   render() {
     console.log("plans size", this.state.userData.length);
-    userData.map(r => console.log(r));
+    this.state.userData.map(r => console.log(r));
     return (
       <div>
         <DataTable
           rows={this.state.userData}
-          headers={headers}
+          headers={this.state.headers}
           render={({
             rows,
             headers,
@@ -159,7 +127,7 @@ componentDidUpdate = () => {
                       ))}
                     </TableRow>
                   </TableHead>
-                  <TableBody {...userData}>
+                  <TableBody {...this.state.userData}>
                     {rows.map((row, i) => (
                       
                       <TableRow key={row.id}>

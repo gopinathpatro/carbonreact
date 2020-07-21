@@ -7,7 +7,40 @@ const CustomTable = React.lazy(() => import('./components/datatables/CustomTable
 class App extends Component {
   state = {
     loading: false,
-    userData: []
+    userData: [],
+    menus: [
+      {
+        "name": "SaveAs",
+        "id": "id001"
+      }, {
+        "name": "Copy",
+        "id": "id002"
+      }, {
+        "name": "Delete",
+        "id": "id003"
+      }],
+    header: [
+      {
+        key: "FirstName",
+        header: "First Name"
+      },
+      {
+        key: "LastName",
+        header: "Last Name"
+      },
+      {
+        key: "id",
+        header: "ID"
+      },
+      {
+        key: "Address",
+        header: "Address"
+      },
+      {
+        key: "Country",
+        header: "Country"
+      }
+    ]
   };
   componentDidMount = () => {
     fetch('http://localhost:8080/customer/all')
@@ -23,7 +56,7 @@ class App extends Component {
 
       <div className="App">
         <Suspense fallback={<h1>Loading data...</h1>}>
-            <CustomTable rows={this.state.userData} loading={this.state.loading} />
+          <CustomTable rows={this.state.userData} loading={this.state.loading} menus={this.state.menus} header={this.state.header} />
         </Suspense>
         
       </div>

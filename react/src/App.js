@@ -9,16 +9,21 @@ class App extends Component {
     loading: false,
     userData: []
   };
-
+  componentDidMount = () => {
+    fetch('http://localhost:8080/customer/all')
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({ userData: data, origData: data, loading: true })
+      })
+      .catch(console.log)
+  }
   render = () => {
     console.log(this.state.userData);
     return (
 
       <div className="App">
         <Suspense fallback={<h1>Loading data...</h1>}>
-          
             <CustomTable rows={this.state.userData} loading={this.state.loading} />
-          
         </Suspense>
         
       </div>

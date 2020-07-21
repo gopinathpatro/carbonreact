@@ -78,13 +78,11 @@ class CustomTable extends Component {
 
     this.setState({ startRow: startRow, endRow: endRow });
   }
-componentDidMount = () => {
-  fetch('http://localhost:8080/customer/all')
-    .then(res => res.json())
-    .then((data) => {
-      this.setState({ userData: data, origData: data, loading: true })
-    })
-    .catch(console.log)
+componentDidUpdate = () => {
+  if(this.state.userData.length != this.state.filteredData.length) {
+    console.log("filterdData : " + this.state.filteredData.length);
+    this.setState({...this.state, userData: this.state.filteredData});
+  }
 }
   handleOnInputValueChange = event => {
     if (event.target.value) {
@@ -106,9 +104,9 @@ componentDidMount = () => {
       });
 
       console.log("filtered plans size", filteredPlans.length);
-      this.setState({ ...this.state, userData: filteredPlans });
+      this.setState({ ...this.state, filteredData: filteredPlans });
     } else {
-      this.setState({ ...this.state,userData: this.state.origData });
+      this.setState({ ...this.state,filteredData: this.state.origData });
     }
   };
 

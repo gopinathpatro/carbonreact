@@ -1,14 +1,24 @@
 package com.techmount.customerportal.data;
 
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy.UpperCamelCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@Component
+@Document(collection = "customer")
 @JsonNaming(value = UpperCamelCaseStrategy.class)
 public class Customer {
+	
+	@Id
+	@JsonIgnore
+	private ObjectId _id;
 	
 	@JsonProperty("id")
 	private String id;
@@ -17,9 +27,9 @@ public class Customer {
 	
 	private String lastName;
 	
-	private String Address;
+	private String address;
 	
-	private String Country;
+	private String country;
 	
 	public Customer() {
 
@@ -30,8 +40,8 @@ public class Customer {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		Address = address;
-		Country = country;
+		this.address = address;
+		this.country = country;
 	}
 
 	public String getId() {
@@ -59,25 +69,35 @@ public class Customer {
 	}
 
 	public String getAddress() {
-		return Address;
+		return address;
 	}
 
 	public void setAddress(String address) {
-		Address = address;
+		this.address = address;
 	}
 
 	public String getCountry() {
-		return Country;
+		return country;
 	}
 
 	public void setCountry(String country) {
-		Country = country;
+		this.country = country;
 	}
 
 	@Override
 	public String toString() {
-		return "Customer {id:" + id + ", firstName:" + firstName + ", lastName:" + lastName + ", Address:" + Address
-				+ ", Country:" + Country + "}";
+		return "Customer {id:" + id + ", firstName:" + firstName + ", lastName:" + lastName + ", Address:" + address
+				+ ", Country:" + country + "}";
 	}
 	
+	public static List<JavaJSONMapping> getHeaders() {
+		List<JavaJSONMapping> headers = new ArrayList<JavaJSONMapping>();
+		headers.add(new JavaJSONMapping("FirstName", "First Name"));
+		headers.add(new JavaJSONMapping("LastName", "Last Name"));
+		headers.add(new JavaJSONMapping("id", "ID"));
+		headers.add(new JavaJSONMapping("Address", "Address"));
+		headers.add(new JavaJSONMapping("Country", "Country"));
+		
+		return headers;
+	}
 }

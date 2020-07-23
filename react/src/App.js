@@ -8,6 +8,7 @@ class App extends Component {
   state = {
     loading: false,
     userData: [],
+    header: [],
     menus: [
       {
         "name": "SaveAs",
@@ -19,39 +20,19 @@ class App extends Component {
         "name": "Delete",
         "id": "id003"
       }],
-    header: [
-      {
-        key: "FirstName",
-        header: "First Name"
-      },
-      {
-        key: "LastName",
-        header: "Last Name"
-      },
-      {
-        key: "id",
-        header: "ID"
-      },
-      {
-        key: "Address",
-        header: "Address"
-      },
-      {
-        key: "Country",
-        header: "Country"
-      }
-    ]
   };
   componentDidMount = () => {
     fetch('http://localhost:8080/customer/all')
       .then(res => res.json())
       .then((data) => {
-        this.setState({ userData: data, origData: data, loading: true })
+        console.log(data);
+        this.setState({ userData: data.Customers, header: data.Headers, origData: data.Customers, loading: true })
       })
       .catch(console.log)
   }
   render = () => {
     console.log(this.state.userData);
+    console.log(this.state.header);
     return (
 
       <div className="App">

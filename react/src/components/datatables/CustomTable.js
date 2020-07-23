@@ -46,12 +46,18 @@ class CustomTable extends Component {
 
     this.setState({ startRow: startRow, endRow: endRow });
   }
-componentDidUpdate = () => {
-  if(this.state.userData.length !== this.state.filteredData.length) {
-    console.log("filterdData : " + this.state.filteredData.length);
-    this.setState({...this.state, userData: this.state.filteredData});
+  
+  componentDidUpdate = () => {
+    if(this.state.userData.length !== this.state.filteredData.length) {
+      console.log("filterdData : " + this.state.filteredData.length);
+      this.setState({...this.state, userData: this.state.filteredData});
+    }
+
+    if(this.state.header.length !== this.props.header.length) {
+      this.setState({ ...this.state, headers: this.props.header })
+    }
   }
-}
+
   handleOnInputValueChange = event => {
     if (event.target.value) {
       let filteredPlans = this.state.userData.filter(obj => {

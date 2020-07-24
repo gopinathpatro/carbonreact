@@ -17,7 +17,6 @@ apply plugin: 'docker'
 group = 'com.techmount'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
-mainClassName = 'com.techmount.customerportal.CustomerPortalApplication'
 
 repositories {
 	mavenCentral()

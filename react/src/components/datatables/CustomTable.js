@@ -18,46 +18,15 @@ const {
   TableBatchAction
 } = DataTable;
 
-let userData = [];
-const headers = [
-  {
-    key: "FirstName",
-    header: "First Name"
-  },
-  {
-    key: "LastName",
-    header: "Last Name"
-  },
-  {
-    key: "id",
-    header: "ID"
-  },
-  {
-    key: "Address",
-    header: "Address"
-  },
-  {
-    key: "Country",
-    header: "Country"
-  }
-];
-
-const menus = [
-  { "name": "Save",
-    "id" : "id001"
-  }, { "name": "Copy",
-        "id" : "id002"
-  }, { 
-    "name":"Delete",
-    "id" : "id003"
-  }];
 
 class CustomTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userData: props.rows,
-      menus: menus,
+      origData: props.rows,
+      menus: props.menus,
+      headers: props.header,
       startRow: 0,
       endRow: 5
     };
@@ -77,10 +46,21 @@ class CustomTable extends Component {
 
     this.setState({ startRow: startRow, endRow: endRow });
   }
+  
+  componentDidUpdate = () => {
+    if(this.state.userData.length !== this.state.filteredData.length) {
+      console.log("filterdData : " + this.state.filteredData.length);
+      this.setState({...this.state, userData: this.state.filteredData});
+    }
+
+    if(this.state.header.length !== this.props.header.length) {
+      this.setState({ ...this.state, headers: this.props.header })
+    }
+  }
 
   handleOnInputValueChange = event => {
     if (event.target.value) {
-      let filteredPlans = userData.filter(obj => {
+      let filteredPlans = this.state.userData.filter(obj => {
         let match = false;
         Object.values(obj).forEach(value => {
           if (!match) {
@@ -98,22 +78,20 @@ class CustomTable extends Component {
       });
 
       console.log("filtered plans size", filteredPlans.length);
-      this.setState({ userData: filteredPlans });
+      this.setState({ ...this.state, filteredData: filteredPlans });
     } else {
-      this.setState({ userData });
+      this.setState({ ...this.state,filteredData: this.state.origData });
     }
   };
-// <TableBatchActions {...getBatchActionProps()}>
-//   <TableBatchAction onClick={this.handleMenuChange(selectedRows)}>Edit</TableBatchAction>
-// </TableBatchActions>
+
   render() {
     console.log("plans size", this.state.userData.length);
-    userData.map(r => console.log(r));
+    this.state.userData.map(r => console.log(r));
     return (
       <div>
         <DataTable
           rows={this.state.userData}
-          headers={headers}
+          headers={this.state.headers}
           render={({
             rows,
             headers,
@@ -127,21 +105,17 @@ class CustomTable extends Component {
           }) => {
             return (
               <TableContainer title="DataTable">
-              
                 <TableToolbar>
-                  
-                <TableToolbarContent>
+                  <TableToolbarContent>
                     <TableToolbarSearch
                       onChange={this.handleOnInputValueChange}
                     />
                     <TableToolbarMenu>
                     {
-                        this.state.menus.map(menu => (<TableToolbarAction key={menu.id} onClick={(e) => this.handleMenuChange(e ,menu, selectedRows)}>{menu.name}</TableToolbarAction>))
+                        this.state.menus.map(menu => (<TableToolbarAction key={menu.name} onClick={(e) => this.handleMenuChange(e ,menu, selectedRows)}>{menu.name}</TableToolbarAction>))
                     }
                     </TableToolbarMenu>
-                    
-                </TableToolbarContent>
-                  
+                  </TableToolbarContent>  
                 </TableToolbar>
                 
                 <Table>
@@ -155,7 +129,7 @@ class CustomTable extends Component {
                       ))}
                     </TableRow>
                   </TableHead>
-                  <TableBody>
+                  <TableBody {...this.state.userData}>
                     {rows.map((row, i) => (
                       
                       <TableRow key={row.id}>

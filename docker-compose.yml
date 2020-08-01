@@ -37,6 +37,23 @@ services:
     networks: 
       - net
       
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - ./rabbitmq/etc/:/etc/rabbitmq/
+      - ./rabbitmq/data/:/var/lib/rabbitmq/
+      - ./rabbitmq/logs/:/var/log/rabbitmq/
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: abcd1234
+    ports:
+      - '5672:5672'
+      - '9090:15672'
+    networks: 
+      - net  
+      
   api:
     build: 
       context: ./customer-portal/
@@ -47,11 +64,13 @@ services:
       - '9091:8080'
     links:
       - api-database
+      - rabbitmq
     networks:
       - net
     hostname: api
     depends_on:
       - api-database
+      - rabbitmq
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9091/health"]
       interval: 1m30s

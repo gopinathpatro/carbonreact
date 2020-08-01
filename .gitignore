@@ -32,3 +32,6 @@
 **/.sonar/
 **/gradle-app.setting
 **/\$*
+
+#mongo
+**/data/

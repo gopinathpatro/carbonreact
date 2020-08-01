@@ -1,0 +1,2 @@
+rootProject.name = 'carbonreact'
+include 'customer-portal'

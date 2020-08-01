@@ -1,0 +1,63 @@
+version: "3.3"
+
+services:
+  api-database:
+    image: mongo
+    container_name: api-database
+    ports:
+      - '27017-27019:27017-27019'
+    command: [--auth]
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: abcd1234
+      MONGO_INITDB_DATABASE: carbonreact
+    networks:
+      - net
+    volumes:
+      - ./customer-portal/data:/data/db
+    hostname: database
+    
+  db-client:
+    image: mongo-express
+    container_name: db-client
+    restart: always
+    ports:
+      - '8081:8081'
+    links:
+      - api-database
+    depends_on:
+      - api-database
+    environment:
+      ME_CONFIG_MONGODB_SERVER: api-database
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: abcd1234
+      ME_CONFIG_BASICAUTH_USERNAME: mongouser
+      ME_CONFIG_BASICAUTH_PASSWORD: abcd1234
+    networks: 
+      - net
+      
+  api:
+    build: 
+      context: ./customer-portal/
+      dockerfile: Dockerfile
+    image: com.techmount/customer-portal
+    container_name: api
+    ports:
+      - '9091:8080'
+    links:
+      - api-database
+    networks:
+      - net
+    hostname: api
+    depends_on:
+      - api-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/health"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+        
+networks:
+  net:
+    driver: bridge

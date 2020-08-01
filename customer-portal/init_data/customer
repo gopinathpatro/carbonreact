@@ -1,0 +1,4 @@
+{"_id":{"$oid":"5f1c9e18d812c321ec002dd2"},"id":"G001","firstName":"Gopinath","lastName":"Patro","address":"Odisha","country":"India"}
+{"_id":{"$oid":"5f1c9f27d812c321ec002dd3"},"id":"G002","firstName":"Ravishankar","lastName":"Ramaswamy","address":"Shimoga","country":"India"}
+{"_id":{"$oid":"5f1c9f49d812c321ec002dd4"},"id":"G003","firstName":"Naveen","lastName":"G","address":"Tumkur","country":"India"}
+{"_id":{"$oid":"5f1c9f71d812c321ec002dd5"},"id":"G004","firstName":"Dipak","lastName":"Pratap","address":"Odisha","country":"India"}

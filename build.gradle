@@ -1,0 +1,14 @@
+repositories {
+    mavenCentral() 
+}
+
+allprojects {
+    repositories {
+        mavenCentral() 
+    }
+}
+
+subprojects {
+    group = "com.techmount"
+    version = '0.0.1'
+}

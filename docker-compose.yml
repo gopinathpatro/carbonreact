@@ -15,7 +15,7 @@ services:
     networks:
       - net
     volumes:
-      - ./customer-portal/data:/data/db
+      - './data/db:/data/db'
     hostname: database
     
   db-client:
@@ -55,10 +55,10 @@ services:
       - net  
       
   api:
-    build: 
-      context: ./customer-portal/
-      dockerfile: Dockerfile
-    image: com.techmount/customer-portal
+    #build: ./customer-portal/ 
+      #context: ./customer-portal/
+      #dockerfile: Dockerfile
+    image: com.techmount/customer-portal:latest
     container_name: api
     ports:
       - '9091:8080'
@@ -73,6 +73,30 @@ services:
       - rabbitmq
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9091/health"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      
+  ui:
+    container_name: ui
+    #build: ./react/
+      #context: ./react/
+      #dockerfile: Dockerfile
+    image: react:latest
+    volumes:
+      - './react/:/app'
+      - '/app/node_modules'
+    depends_on:
+      - api
+    ports:
+      - 3001:3000
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
       interval: 1m30s
       timeout: 10s
       retries: 3

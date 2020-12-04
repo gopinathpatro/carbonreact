@@ -1,2 +1,3 @@
 rootProject.name = 'carbonreact'
 include 'customer-portal'
+include 'react'

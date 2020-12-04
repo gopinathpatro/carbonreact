@@ -1,0 +1,101 @@
+plugins {
+    id "com.moowork.node" version "1.3.1"
+    //id 'com.palantir.docker' version '0.25.0'
+    //id 'com.palantir.docker-run' version '0.25.0'
+
+}
+
+apply plugin: 'base'
+apply plugin: "com.moowork.node"
+
+node {
+    // Version of node to use.
+    //version = '14.15.1'
+
+    // Version of npm to use.
+    //npmVersion = '6.14.6'
+
+    // Version of Yarn to use.
+    //yarnVersion = '1.22.4'
+
+    // Base URL for fetching node distributions (change if you have a mirror).
+    distBaseUrl = 'https://nodejs.org/dist'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = false
+
+    // Set the work directory for unpacking node
+    //workDir = file("${project.buildDir}/nodejs")
+
+    // Set the work directory for NPM
+    //npmWorkDir = file("${project.buildDir}/npm")
+
+    // Set the work directory for Yarn
+    //yarnWorkDir = file("${project.buildDir}/yarn")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${project.projectDir}")
+}
+
+task appNpmInstall(type: NpmTask) {
+	description = "Installs all dependencies from package.json"
+	args = ["install"]
+}
+
+task appNpmBuild(type: NpmTask) {
+	description = "Builds production version of the webapp"
+    inputs.files fileTree("public")
+    inputs.files fileTree("src")
+    inputs.file 'package.json'
+    inputs.file 'package-lock.json'
+
+    outputs.dir 'build'
+
+	args = ["run", "build"]
+}
+
+appNpmBuild.dependsOn appNpmInstall
+build.dependsOn appNpmBuild
+
+task copySrcToDockerDir(type: Copy) {
+    from "$projectDir/src"
+    include "**/*"
+    into "$buildDir/docker/src"
+}
+
+task copyPackageToDockerDir(type: Copy) {
+    from "$projectDir"
+    include "package.json", "package-lock.json", "Dockerfile", ".dockerignore"
+    into "$buildDir/docker"
+}
+
+task prepareDockerDir(type: Copy) {
+    from "$projectDir/docker"
+    include "**/*"
+    filter { it.replaceAll('<%=name%>', project.name) } // makes Dockerfile more generic
+    into "$buildDir/docker"
+}
+
+task buildDockerImage(type:Exec) {
+    workingDir "$buildDir"
+    commandLine "docker", "build", "-t", "${project.name}:${project.version}", "-t", "${project.name}:latest", "docker"
+}
+
+task runDockerImage(type:Exec) {
+    workingDir "$buildDir/docker"
+    commandLine "docker", "run", "-itd", "--rm", "-v", "${projectDir}:/app", "-v", "/app/node_modules", "-p", "3001:3000", "-e", "CHOKIDAR_USEPOLLING=true", "${project.name}:${project.version}"  
+}
+
+/*task pushDockerImage(type: Exec) {
+    commandLine "docker", "push", "maniekq/${project.name}:${project.version}"
+}*/
+
+copySrcToDockerDir.dependsOn build
+copyPackageToDockerDir.dependsOn build
+prepareDockerDir.dependsOn copySrcToDockerDir
+prepareDockerDir.dependsOn copyPackageToDockerDir
+buildDockerImage.dependsOn prepareDockerDir
+runDockerImage.dependsOn buildDockerImage
+//buildDockerImage.dependsOn copySrcToDockerDir
+//pushDockerImage.dependsOn buildDockerImage
